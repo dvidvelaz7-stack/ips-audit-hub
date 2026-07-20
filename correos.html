@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Correos Inteligentes · IPS Audit Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>IPS Audit Hub</h1>
+      <span>Subgerencia de Auditoría · Grupo IPS México</span>
+    </div>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="correos.html" class="active">Correos</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2 class="page-title">Correos Inteligentes</h2>
+    <p class="page-subtitle">Clasificación automática de correos del área por semana y categoría de servicio.</p>
+
+    <div class="filters">
+      <span class="filter-chip active">Todos</span>
+      <span class="filter-chip">Alta</span>
+      <span class="filter-chip">Baja</span>
+      <span class="filter-chip">Pre-baja</span>
+      <span class="filter-chip">Extensión</span>
+      <span class="filter-chip">Restructuración</span>
+      <span class="filter-chip">Cambio de fecha</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Asunto</th>
+          <th>Categoría</th>
+          <th>Semana</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Solicitud de alta — colaborador nuevo ingreso</td>
+          <td><span class="badge alta">Alta</span></td>
+          <td>Semana 29</td>
+          <td>Clasificado</td>
+        </tr>
+        <tr>
+          <td>Baja definitiva — fin de contrato</td>
+          <td><span class="badge baja">Baja</span></td>
+          <td>Semana 29</td>
+          <td>Clasificado</td>
+        </tr>
+        <tr>
+          <td>Pre-baja pendiente de confirmación</td>
+          <td><span class="badge prebaja">Pre-baja</span></td>
+          <td>Semana 28</td>
+          <td>Clasificado</td>
+        </tr>
+        <tr>
+          <td>Extensión de contrato temporal</td>
+          <td><span class="badge extension">Extensión</span></td>
+          <td>Semana 28</td>
+          <td>Clasificado</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note-box">
+      Estos son datos de ejemplo para probar el diseño. El siguiente paso de este módulo es conectar aquí la lógica del clasificador que ya funciona en PowerShell, para que esta tabla se llene automáticamente desde Outlook.
+    </div>
+  </main>
+
+  <footer>IPS Audit Hub · Módulo Correos Inteligentes · 2026</footer>
+</body>
+</html>
