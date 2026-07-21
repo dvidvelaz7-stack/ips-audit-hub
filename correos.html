@@ -9,8 +9,11 @@
 <body>
   <header>
     <div class="brand">
-      <h1>IPS Audit Hub</h1>
-      <span>Subgerencia de Auditoría · Grupo IPS México</span>
+      <img src="assets/logo-ips.png" alt="Logo IPS" />
+      <div class="brand-text">
+        <h1>IPS Audit Hub</h1>
+        <span>Subgerencia de Auditoría · Grupo IPS México</span>
+      </div>
     </div>
     <nav>
       <a href="index.html">Dashboard</a>
@@ -20,60 +23,90 @@
 
   <main>
     <h2 class="page-title">Correos Inteligentes</h2>
-    <p class="page-subtitle">Clasificación automática de correos del área por semana y categoría de servicio.</p>
+    <p class="page-subtitle" id="subtitle">Clasificación automática de correos del área por semana, servicio y tipo de movimiento.</p>
 
-    <div class="filters">
-      <span class="filter-chip active">Todos</span>
-      <span class="filter-chip">Alta</span>
-      <span class="filter-chip">Baja</span>
-      <span class="filter-chip">Pre-baja</span>
-      <span class="filter-chip">Extensión</span>
-      <span class="filter-chip">Restructuración</span>
-      <span class="filter-chip">Cambio de fecha</span>
+    <div class="filters" id="filters">
+      <span class="filter-chip active" data-filter="todos">Todos</span>
+      <span class="filter-chip" data-filter="nuevo">Nuevo</span>
+      <span class="filter-chip" data-filter="modificacion">Modificación</span>
+      <span class="filter-chip" data-filter="baja">Baja</span>
+      <span class="filter-chip" data-filter="renovacion">Renovación</span>
     </div>
 
     <table>
       <thead>
         <tr>
           <th>Asunto</th>
-          <th>Categoría</th>
+          <th>Servicio</th>
+          <th>Movimiento</th>
           <th>Semana</th>
-          <th>Estatus</th>
+          <th>Fecha vigencia</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Solicitud de alta — colaborador nuevo ingreso</td>
-          <td><span class="badge alta">Alta</span></td>
-          <td>Semana 29</td>
-          <td>Clasificado</td>
-        </tr>
-        <tr>
-          <td>Baja definitiva — fin de contrato</td>
-          <td><span class="badge baja">Baja</span></td>
-          <td>Semana 29</td>
-          <td>Clasificado</td>
-        </tr>
-        <tr>
-          <td>Pre-baja pendiente de confirmación</td>
-          <td><span class="badge prebaja">Pre-baja</span></td>
-          <td>Semana 28</td>
-          <td>Clasificado</td>
-        </tr>
-        <tr>
-          <td>Extensión de contrato temporal</td>
-          <td><span class="badge extension">Extensión</span></td>
-          <td>Semana 28</td>
-          <td>Clasificado</td>
-        </tr>
-      </tbody>
+      <tbody id="tabla-correos"></tbody>
     </table>
 
-    <div class="note-box">
-      Estos son datos de ejemplo para probar el diseño. El siguiente paso de este módulo es conectar aquí la lógica del clasificador que ya funciona en PowerShell, para que esta tabla se llene automáticamente desde Outlook.
-    </div>
+    <div class="note-box" id="nota">Cargando información...</div>
   </main>
 
   <footer>IPS Audit Hub · Módulo Correos Inteligentes · 2026</footer>
+
+  <script>
+    const datosEjemplo = [
+      { Asunto: "Solicitud de alta — colaborador nuevo ingreso", Servicio: "fijos", Movimiento: "nuevo", Semana: 29, FechaVigencia: "2026-07-14" },
+      { Asunto: "Baja definitiva — fin de contrato", Servicio: "temporales", Movimiento: "baja", Semana: 29, FechaVigencia: "2026-07-15" },
+      { Asunto: "Modificación de condiciones de servicio", Servicio: "especiales", Movimiento: "modificacion", Semana: 28, FechaVigencia: "2026-07-08" },
+      { Asunto: "Renovación / extensión de contrato temporal", Servicio: "multiples", Movimiento: "renovacion", Semana: 28, FechaVigencia: "2026-07-06" },
+    ];
+
+    let datosActuales = [];
+    let filtroActivo = "todos";
+
+    function pintarTabla() {
+      const tbody = document.getElementById("tabla-correos");
+      tbody.innerHTML = "";
+      const filas = datosActuales.filter(d => filtroActivo === "todos" || d.Movimiento === filtroActivo);
+
+      if (filas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:#6E7794;">No hay correos en esta categoría.</td></tr>';
+        return;
+      }
+
+      filas.forEach(d => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${d.Asunto ?? ""}</td>
+          <td>${d.Servicio ?? ""}</td>
+          <td><span class="badge ${d.Movimiento ?? ""}">${d.Movimiento ?? "sin clasificar"}</span></td>
+          <td>${d.Semana ? "Semana " + d.Semana : ""}</td>
+          <td>${d.FechaVigencia ?? ""}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById("filters").addEventListener("click", (e) => {
+      if (!e.target.classList.contains("filter-chip")) return;
+      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+      e.target.classList.add("active");
+      filtroActivo = e.target.dataset.filter;
+      pintarTabla();
+    });
+
+    fetch("correos.json")
+      .then(r => { if (!r.ok) throw new Error("no file"); return r.json(); })
+      .then(data => {
+        datosActuales = data;
+        document.getElementById("nota").textContent =
+          `Datos reales cargados desde correos.json — ${data.length} correos clasificados.`;
+        pintarTabla();
+      })
+      .catch(() => {
+        datosActuales = datosEjemplo;
+        document.getElementById("nota").textContent =
+          "Estos son datos de ejemplo. Cuando subas el archivo correos.json (generado por el script de clasificación), esta tabla mostrará tus correos reales automáticamente.";
+        pintarTabla();
+      });
+  </script>
 </body>
 </html>

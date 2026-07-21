@@ -29,8 +29,20 @@ header {
 
 header .brand {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
+  align-items: center;
+  gap: 14px;
+}
+
+header .brand img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+header .brand .brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 header .brand h1 {
@@ -193,10 +205,10 @@ tr:last-child td { border-bottom: none; }
   border-radius: 20px;
 }
 
-.badge.alta { background: #E4F7EC; color: #1E7A46; }
+.badge.nuevo { background: #E4F7EC; color: #1E7A46; }
 .badge.baja { background: #FCE7E7; color: #B3261E; }
-.badge.prebaja { background: #FFF1D6; color: #9A6300; }
-.badge.extension { background: #E7EEFF; color: #2A4BD7; }
+.badge.modificacion { background: #FFF1D6; color: #9A6300; }
+.badge.renovacion { background: #E7EEFF; color: #2A4BD7; }
 
 .note-box {
   margin-top: 24px;
